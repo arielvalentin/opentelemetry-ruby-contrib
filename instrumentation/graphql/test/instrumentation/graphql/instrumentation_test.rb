@@ -17,7 +17,7 @@ describe OpenTelemetry::Instrumentation::GraphQL do
     instrumentation.instance_variable_set(:@installed, false)
 
     # Remove added tracers
-    ::GraphQL::Schema.instance_variable_set(:@own_tracers, [])
+    GraphQL::Schema.instance_variable_set(:@own_tracers, [])
   end
 
   it 'has #name' do

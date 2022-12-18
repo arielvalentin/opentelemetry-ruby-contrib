@@ -38,7 +38,7 @@ describe OpenTelemetry::Instrumentation::GraphQL::Tracers::GraphQLTracer do
     instrumentation.instance_variable_set(:@installed, false)
 
     # Reset various instance variables to clear state between tests
-    ::GraphQL::Schema.instance_variable_set(:@own_tracers, [])
+    GraphQL::Schema.instance_variable_set(:@own_tracers, [])
 
     # Reseting @graphql_definition is needed for tests running against version `1.9.x`
     SomeOtherGraphQLAppSchema.remove_instance_variable(:@graphql_definition) if SomeOtherGraphQLAppSchema.instance_variable_defined?(:@graphql_definition)
@@ -187,13 +187,13 @@ describe OpenTelemetry::Instrumentation::GraphQL::Tracers::GraphQLTracer do
     include GraphQL::Schema::Interface
   end
 
-  class Car < ::GraphQL::Schema::Object
+  class Car < GraphQL::Schema::Object
     implements Vehicle
 
     field :price, Integer, null: true
   end
 
-  class SlightlyComplexType < ::GraphQL::Schema::Object
+  class SlightlyComplexType < GraphQL::Schema::Object
     field :uppercased_value, String, null: false
     field :original_value, String, null: false
 
@@ -202,7 +202,7 @@ describe OpenTelemetry::Instrumentation::GraphQL::Tracers::GraphQLTracer do
     end
   end
 
-  class SimpleResolver < ::GraphQL::Schema::Resolver
+  class SimpleResolver < GraphQL::Schema::Resolver
     type SlightlyComplexType, null: false
 
     argument :id, Integer, required: true
@@ -212,7 +212,7 @@ describe OpenTelemetry::Instrumentation::GraphQL::Tracers::GraphQLTracer do
     end
   end
 
-  class QueryType < ::GraphQL::Schema::Object
+  class QueryType < GraphQL::Schema::Object
     field :simple_field, String, null: false
     field :resolved_field, resolver: SimpleResolver
 
@@ -228,20 +228,20 @@ describe OpenTelemetry::Instrumentation::GraphQL::Tracers::GraphQLTracer do
     end
   end
 
-  class OtherQueryType < ::GraphQL::Schema::Object
+  class OtherQueryType < GraphQL::Schema::Object
     field :simple_field, String, null: false
     def simple_field
       'Hello.'
     end
   end
 
-  class SomeOtherGraphQLAppSchema < ::GraphQL::Schema
+  class SomeOtherGraphQLAppSchema < GraphQL::Schema
     query(::OtherQueryType)
     use GraphQL::Execution::Interpreter
     use GraphQL::Analysis::AST
   end
 
-  class SomeGraphQLAppSchema < ::GraphQL::Schema
+  class SomeGraphQLAppSchema < GraphQL::Schema
     query(::QueryType)
     use GraphQL::Execution::Interpreter
     use GraphQL::Analysis::AST
