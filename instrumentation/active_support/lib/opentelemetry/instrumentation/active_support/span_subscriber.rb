@@ -28,14 +28,14 @@ module OpenTelemetry
           disallowed_notification_payload_keys: disallowed_notification_payload_keys
         )
 
-        subscriber_object = ::ActiveSupport::Notifications.subscribe(pattern, subscriber)
-        ::ActiveSupport::Notifications.notifier.synchronize do
+        subscriber_object = ActiveSupport::Notifications.subscribe(pattern, subscriber)
+        ActiveSupport::Notifications.notifier.synchronize do
           if ::Rails::VERSION::MAJOR >= 6
-            s = ::ActiveSupport::Notifications.notifier.instance_variable_get(:@string_subscribers)[pattern].pop
-            ::ActiveSupport::Notifications.notifier.instance_variable_get(:@string_subscribers)[pattern].unshift(s)
+            s = ActiveSupport::Notifications.notifier.instance_variable_get(:@string_subscribers)[pattern].pop
+            ActiveSupport::Notifications.notifier.instance_variable_get(:@string_subscribers)[pattern].unshift(s)
           else
-            s = ::ActiveSupport::Notifications.notifier.instance_variable_get(:@subscribers).pop
-            ::ActiveSupport::Notifications.notifier.instance_variable_get(:@subscribers).unshift(s)
+            s = ActiveSupport::Notifications.notifier.instance_variable_get(:@subscribers).pop
+            ActiveSupport::Notifications.notifier.instance_variable_get(:@subscribers).unshift(s)
           end
         end
         subscriber_object

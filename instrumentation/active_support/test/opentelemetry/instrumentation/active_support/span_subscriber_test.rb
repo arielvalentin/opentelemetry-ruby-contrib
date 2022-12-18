@@ -184,20 +184,20 @@ describe OpenTelemetry::Instrumentation::ActiveSupport::SpanSubscriber do
 
   describe 'instrument' do
     before do
-      ::ActiveSupport::Notifications.unsubscribe('bar.foo')
+      ActiveSupport::Notifications.unsubscribe('bar.foo')
     end
 
     it 'does not trace an event by default' do
-      ::ActiveSupport::Notifications.subscribe('bar.foo') do
+      ActiveSupport::Notifications.subscribe('bar.foo') do
         # pass
       end
-      ::ActiveSupport::Notifications.instrument('bar.foo', extra: 'context')
+      ActiveSupport::Notifications.instrument('bar.foo', extra: 'context')
       _(last_span).must_be_nil
     end
 
     it 'traces an event when a span subscriber is used' do
       OpenTelemetry::Instrumentation::ActiveSupport.subscribe(tracer, 'bar.foo')
-      ::ActiveSupport::Notifications.instrument('bar.foo', extra: 'context')
+      ActiveSupport::Notifications.instrument('bar.foo', extra: 'context')
 
       _(last_span).wont_be_nil
       _(last_span.name).must_equal('foo bar')
@@ -205,11 +205,11 @@ describe OpenTelemetry::Instrumentation::ActiveSupport::SpanSubscriber do
     end
 
     it 'finishes spans even when block subscribers blow up' do
-      ::ActiveSupport::Notifications.subscribe('bar.foo') { raise 'boom' }
+      ActiveSupport::Notifications.subscribe('bar.foo') { raise 'boom' }
       OpenTelemetry::Instrumentation::ActiveSupport.subscribe(tracer, 'bar.foo')
 
       expect do
-        ::ActiveSupport::Notifications.instrument('bar.foo', extra: 'context')
+        ActiveSupport::Notifications.instrument('bar.foo', extra: 'context')
       end.must_raise RuntimeError
 
       _(last_span).wont_be_nil
@@ -218,11 +218,11 @@ describe OpenTelemetry::Instrumentation::ActiveSupport::SpanSubscriber do
     end
 
     it 'finishes spans even when complex subscribers blow up' do
-      ::ActiveSupport::Notifications.subscribe('bar.foo', CrashingEndSubscriber.new)
+      ActiveSupport::Notifications.subscribe('bar.foo', CrashingEndSubscriber.new)
       OpenTelemetry::Instrumentation::ActiveSupport.subscribe(tracer, 'bar.foo')
 
       expect do
-        ::ActiveSupport::Notifications.instrument('bar.foo', extra: 'context')
+        ActiveSupport::Notifications.instrument('bar.foo', extra: 'context')
       end.must_raise RuntimeError
 
       _(last_span).wont_be_nil
@@ -234,7 +234,7 @@ describe OpenTelemetry::Instrumentation::ActiveSupport::SpanSubscriber do
       obj = OpenTelemetry::Instrumentation::ActiveSupport.subscribe(tracer, 'bar.foo')
       ActiveSupport::Notifications.unsubscribe(obj)
 
-      ::ActiveSupport::Notifications.instrument('bar.foo', extra: 'context')
+      ActiveSupport::Notifications.instrument('bar.foo', extra: 'context')
 
       _(obj.class).must_equal(ActiveSupport::Notifications::Fanout::Subscribers::Evented)
       _(last_span).must_be_nil

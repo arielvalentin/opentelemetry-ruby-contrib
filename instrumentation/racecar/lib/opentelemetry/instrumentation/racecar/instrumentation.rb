@@ -34,7 +34,7 @@ module OpenTelemetry
         def add_subscribers
           require_relative 'process_message_subscriber'
           subscriber = ProcessMessageSubscriber.new
-          ::ActiveSupport::Notifications.subscribe('process_message.racecar', subscriber)
+          ActiveSupport::Notifications.subscribe('process_message.racecar', subscriber)
         end
 
         def patch
