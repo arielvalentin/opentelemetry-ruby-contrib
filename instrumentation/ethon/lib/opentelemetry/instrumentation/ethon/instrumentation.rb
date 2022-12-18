@@ -29,8 +29,8 @@ module OpenTelemetry
         end
 
         def add_patches
-          ::Ethon::Easy.prepend(Patches::Easy)
-          ::Ethon::Multi.prepend(Patches::Multi)
+          Ethon::Easy.prepend(Patches::Easy)
+          Ethon::Multi.prepend(Patches::Multi)
         end
       end
     end
