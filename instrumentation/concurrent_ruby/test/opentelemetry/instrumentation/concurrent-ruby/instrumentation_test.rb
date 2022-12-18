@@ -17,7 +17,7 @@ describe OpenTelemetry::Instrumentation::ConcurrentRuby::Instrumentation do
 
   before do
     exporter.reset
-    @unmodified_future = ::Concurrent::ThreadPoolExecutor.dup
+    @unmodified_future = Concurrent::ThreadPoolExecutor.dup
   end
 
   after do
@@ -36,7 +36,7 @@ describe OpenTelemetry::Instrumentation::ConcurrentRuby::Instrumentation do
       outer_span = tracer.start_span('outer_span')
       inner_span = nil
       OpenTelemetry::Trace.with_span(outer_span) do
-        future = ::Concurrent::Future.new do
+        future = Concurrent::Future.new do
           inner_span = tracer.start_span('inner_span')
           inner_span.finish
         end
@@ -55,7 +55,7 @@ describe OpenTelemetry::Instrumentation::ConcurrentRuby::Instrumentation do
       outer_span = tracer.start_span('outer_span')
       inner_span = nil
       OpenTelemetry::Trace.with_span(outer_span) do
-        future = ::Concurrent::Promises.future do
+        future = Concurrent::Promises.future do
           inner_span = tracer.start_span('inner_span')
           inner_span.finish
         end

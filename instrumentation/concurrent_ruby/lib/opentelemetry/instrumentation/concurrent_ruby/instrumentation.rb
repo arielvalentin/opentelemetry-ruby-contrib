@@ -26,7 +26,7 @@ module OpenTelemetry
         end
 
         def patch
-          ::Concurrent::ThreadPoolExecutor.prepend Patches::ThreadPoolExecutor
+          Concurrent::ThreadPoolExecutor.prepend Patches::ThreadPoolExecutor
         end
       end
     end
