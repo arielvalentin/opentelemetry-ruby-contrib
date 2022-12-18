@@ -15,7 +15,7 @@ OpenTelemetry::SDK.configure do |c|
   c.use 'OpenTelemetry::Instrumentation::ActiveJob'
 end
 
-class TestJob < ::ActiveJob::Base
+class TestJob < ActiveJob::Base
   def perform
     puts <<~EOS
 

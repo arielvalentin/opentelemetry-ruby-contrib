@@ -59,7 +59,7 @@ module OpenTelemetry
         private
 
         def gem_version
-          ::ActiveJob.version
+          ActiveJob.version
         end
 
         def require_dependencies
@@ -68,8 +68,8 @@ module OpenTelemetry
         end
 
         def patch_activejob
-          ::ActiveJob::Base.prepend(Patches::Base)
-          ::ActiveJob::Base.prepend(Patches::ActiveJobCallbacks)
+          ActiveJob::Base.prepend(Patches::Base)
+          ActiveJob::Base.prepend(Patches::ActiveJobCallbacks)
         end
       end
     end
