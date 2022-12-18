@@ -65,7 +65,7 @@ describe OpenTelemetry::Instrumentation::Trilogy do
       instrumentation.install({})
       client.query('SELECT 1')
 
-      _(span.attributes.keys).wont_include(::OpenTelemetry::SemanticConventions::Trace::PEER_SERVICE)
+      _(span.attributes.keys).wont_include (OpenTelemetry::SemanticConventions::Trace::PEER_SERVICE)
     end
   end
 

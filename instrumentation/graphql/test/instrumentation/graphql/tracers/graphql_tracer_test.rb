@@ -236,13 +236,13 @@ describe OpenTelemetry::Instrumentation::GraphQL::Tracers::GraphQLTracer do
   end
 
   class SomeOtherGraphQLAppSchema < GraphQL::Schema
-    query(::OtherQueryType)
+    query (OtherQueryType)
     use GraphQL::Execution::Interpreter
     use GraphQL::Analysis::AST
   end
 
   class SomeGraphQLAppSchema < GraphQL::Schema
-    query(::QueryType)
+    query (QueryType)
     use GraphQL::Execution::Interpreter
     use GraphQL::Analysis::AST
     orphan_types Car
