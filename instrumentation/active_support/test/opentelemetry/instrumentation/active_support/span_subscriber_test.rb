@@ -196,7 +196,7 @@ describe OpenTelemetry::Instrumentation::ActiveSupport::SpanSubscriber do
     end
 
     it 'traces an event when a span subscriber is used' do
-      ::OpenTelemetry::Instrumentation::ActiveSupport.subscribe(tracer, 'bar.foo')
+      OpenTelemetry::Instrumentation::ActiveSupport.subscribe(tracer, 'bar.foo')
       ::ActiveSupport::Notifications.instrument('bar.foo', extra: 'context')
 
       _(last_span).wont_be_nil
@@ -206,7 +206,7 @@ describe OpenTelemetry::Instrumentation::ActiveSupport::SpanSubscriber do
 
     it 'finishes spans even when block subscribers blow up' do
       ::ActiveSupport::Notifications.subscribe('bar.foo') { raise 'boom' }
-      ::OpenTelemetry::Instrumentation::ActiveSupport.subscribe(tracer, 'bar.foo')
+      OpenTelemetry::Instrumentation::ActiveSupport.subscribe(tracer, 'bar.foo')
 
       expect do
         ::ActiveSupport::Notifications.instrument('bar.foo', extra: 'context')
@@ -219,7 +219,7 @@ describe OpenTelemetry::Instrumentation::ActiveSupport::SpanSubscriber do
 
     it 'finishes spans even when complex subscribers blow up' do
       ::ActiveSupport::Notifications.subscribe('bar.foo', CrashingEndSubscriber.new)
-      ::OpenTelemetry::Instrumentation::ActiveSupport.subscribe(tracer, 'bar.foo')
+      OpenTelemetry::Instrumentation::ActiveSupport.subscribe(tracer, 'bar.foo')
 
       expect do
         ::ActiveSupport::Notifications.instrument('bar.foo', extra: 'context')
@@ -231,7 +231,7 @@ describe OpenTelemetry::Instrumentation::ActiveSupport::SpanSubscriber do
     end
 
     it 'supports unsubscribe' do
-      obj = ::OpenTelemetry::Instrumentation::ActiveSupport.subscribe(tracer, 'bar.foo')
+      obj = OpenTelemetry::Instrumentation::ActiveSupport.subscribe(tracer, 'bar.foo')
       ActiveSupport::Notifications.unsubscribe(obj)
 
       ::ActiveSupport::Notifications.instrument('bar.foo', extra: 'context')

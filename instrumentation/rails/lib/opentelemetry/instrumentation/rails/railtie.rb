@@ -19,7 +19,7 @@ module OpenTelemetry
           # See https://api.rubyonrails.org/classes/Rails/Generators/NamedBase.html#method-i-application_name
           ENV['OTEL_SERVICE_NAME'] ||= app.class.name.split('::').first.underscore
 
-          ::OpenTelemetry::SDK.configure do |c|
+          OpenTelemetry::SDK.configure do |c|
             c.logger = ::Rails.logger
             c.use_all
           end
