@@ -21,7 +21,7 @@ EXPORTER = OpenTelemetry::SDK::Trace::Export::InMemorySpanExporter.new
 span_processor = OpenTelemetry::SDK::Trace::Export::SimpleSpanProcessor.new(EXPORTER)
 
 OpenTelemetry::SDK.configure do |c|
-  c.logger = ::Logger.new(File::NULL)
+  c.logger = Logger.new(File::NULL)
   c.use_all
   c.add_span_processor span_processor
 end
