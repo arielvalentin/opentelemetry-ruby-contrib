@@ -30,13 +30,13 @@ module OpenTelemetry
         end
 
         def register_tracer_middleware
-          ::Faraday::Middleware.register_middleware(
+          Faraday::Middleware.register_middleware(
             open_telemetry: Middlewares::TracerMiddleware
           )
         end
 
         def use_middleware_by_default
-          ::Faraday::RackBuilder.prepend(Patches::RackBuilder)
+          Faraday::RackBuilder.prepend(Patches::RackBuilder)
         end
       end
     end

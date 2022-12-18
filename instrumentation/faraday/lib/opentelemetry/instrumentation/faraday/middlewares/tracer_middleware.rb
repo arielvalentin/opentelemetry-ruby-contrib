@@ -10,7 +10,7 @@ module OpenTelemetry
       module Middlewares
         # TracerMiddleware propagates context and instruments Faraday requests
         # by way of its middlware system
-        class TracerMiddleware < ::Faraday::Middleware
+        class TracerMiddleware < Faraday::Middleware
           HTTP_METHODS_SYMBOL_TO_STRING = {
             connect: 'CONNECT',
             delete: 'DELETE',
