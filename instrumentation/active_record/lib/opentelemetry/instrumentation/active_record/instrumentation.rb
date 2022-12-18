@@ -60,7 +60,8 @@ module OpenTelemetry
         end
 
         def require_dependencies
-          require 'ruby2_keywords'
+          # Requires investigation. We have dropped support for Ruby 2.6 but that is not reflected in our gemspecs
+          require 'ruby2_keywords' # rubocop:disable Style/RedundantRequireStatement
           require_relative 'patches/querying'
           require_relative 'patches/persistence'
           require_relative 'patches/persistence_class_methods'
