@@ -9,7 +9,7 @@ module OpenTelemetry
     module Excon
       module Middlewares
         # Excon middleware for instrumentation
-        class TracerMiddleware < ::Excon::Middleware::Base
+        class TracerMiddleware < Excon::Middleware::Base
           HTTP_METHODS_TO_UPPERCASE = %w[connect delete get head options patch post put trace].each_with_object({}) do |method, hash|
             uppercase_method = method.upcase
             hash[method] = uppercase_method
