@@ -42,7 +42,9 @@ describe OpenTelemetry::Instrumentation::Bunny::Patches::Consumer do
   it 'traces produce and consuming' do
     queue = channel.queue('', exclusive: true).bind(exchange, routing_key: 'ruby.#')
 
+    # rubocop:disable Lint/EmptyBlock
     consumer = queue.subscribe(manual_ack: true) { |_delivery_info, _properties, _payload| }
+    # rubocop:enable Lint/EmptyBlock
 
     exchange.publish('San Diego update', routing_key: 'ruby.news')
 
