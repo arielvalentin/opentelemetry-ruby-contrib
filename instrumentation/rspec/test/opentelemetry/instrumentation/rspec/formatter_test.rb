@@ -33,6 +33,7 @@ describe OpenTelemetry::Instrumentation::RSpec::Formatter do
     spans
   end
 
+  # rubocop:disable Lint/EmptyBlock
   it 'exports spans for suites' do
     spans = run_rspec_with_tracing do
       group_string = RSpec.describe(String) do
@@ -48,6 +49,7 @@ describe OpenTelemetry::Instrumentation::RSpec::Formatter do
     end
     _(spans.map(&:name)).must_equal ['example string', 'String', 'example one', 'group one', 'example two', 'group two', 'RSpec suite']
   end
+  # rubocop:enable Lint/EmptyBlock
 
   it 'will not be affected by tests that mock time' do
     current_time = Time.now
