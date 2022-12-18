@@ -37,7 +37,7 @@ describe OpenTelemetry::Instrumentation::PG::Instrumentation do
 
   describe 'tracing' do
     let(:client) do
-      ::PG::Connection.open(
+      PG::Connection.open(
         host: host,
         port: port,
         user: user,
@@ -325,10 +325,10 @@ describe OpenTelemetry::Instrumentation::PG::Instrumentation do
     end
 
     describe 'when connection has multiple hosts' do
-      before { skip 'requires libpq >= 10.0' if ::PG.library_version < 10_00_00 } # rubocop:disable Style/NumericLiterals
+      before { skip 'requires libpq >= 10.0' if PG.library_version < 10_00_00 } # rubocop:disable Style/NumericLiterals
 
       let(:client) do
-        ::PG::Connection.open(
+        PG::Connection.open(
           host: ['nowhere.', host].join(','),
           port: ['20823', port].join(','),
           user: user,
@@ -341,7 +341,7 @@ describe OpenTelemetry::Instrumentation::PG::Instrumentation do
         client.query('SELECT 1')
 
         _(span.attributes['net.peer.name']).must_equal host
-        _(span.attributes['net.peer.port']).must_equal port.to_i if ::PG.const_defined?('DEF_PORT')
+        _(span.attributes['net.peer.port']).must_equal port.to_i if PG.const_defined?('DEF_PORT')
       end
     end
   end unless ENV['OMIT_SERVICES']

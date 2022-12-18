@@ -24,7 +24,7 @@ describe OpenTelemetry::Instrumentation::Trilogy do
     }
   end
   let(:client) do
-    ::Trilogy.new(driver_options)
+    Trilogy.new(driver_options)
   end
 
   let(:host) { ENV.fetch('TEST_MYSQL_HOST', '127.0.0.1') }
@@ -154,7 +154,7 @@ describe OpenTelemetry::Instrumentation::Trilogy do
 
     describe 'when quering using unix domain socket' do
       let(:client) do
-        ::Trilogy.new(
+        Trilogy.new(
           username: username,
           password: password,
           ssl: false
