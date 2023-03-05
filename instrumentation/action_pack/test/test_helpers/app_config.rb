@@ -13,7 +13,7 @@ require_relative 'routes'
 module AppConfig
   extend self
 
-  def initialize_app(use_exceptions_app: false, remove_rack_tracer_middleware: false)
+  def initialize_app(use_exceptions_app: false, remove_rack_tracer_middleware: false, use_rack_events: true)
     new_app = Application.new
     new_app.config.secret_key_base = 'secret_key_base'
 
@@ -42,8 +42,9 @@ module AppConfig
     add_exceptions_app(new_app) if use_exceptions_app
     add_middlewares(new_app)
 
-    new_app.initialize!
-
+    OpenTelemetry::TestHelpers.with_env('OTEL_RUBY_INSTRUMENTATION_RACK_CONFIG_OPTS' => "use_rack_events=#{use_rack_events}") do
+      new_app.initialize!
+    end
     draw_routes(new_app)
 
     new_app
@@ -53,10 +54,10 @@ module AppConfig
 
   def remove_rack_middleware(application)
     application.middleware.delete(
-      OpenTelemetry::Instrumentation::Rack::Middlewares::TracerMiddleware
-    )
+      ::OpenTelemetry::Instrumentation::Rack::Middlewares::TracerMiddleware
+    ) if defined?(::OpenTelemetry::Instrumentation::Rack::Middlewares::TracerMiddleware)
     application.middleware.delete(
-      Rack::Events
+      ::Rack::Events
     )
   end
 
