@@ -21,8 +21,10 @@ module AppConfig
     new_app.config.eager_load = false
 
     # Prevent tests from creating log/*.log
+    use_stderr = ENV.fetch('RAILS_LOG_STDERR', 'false') == 'true'
+    io_stream = use_stderr ? $stderr : File::NULL
     level = ENV.fetch('OTEL_LOG_LEVEL', 'fatal').to_sym
-    new_app.config.logger = Logger.new($stderr, level: level)
+    new_app.config.logger = Logger.new(io_stream, level: level)
     new_app.config.log_level = level
 
     new_app.config.filter_parameters = [:param_to_be_filtered]
@@ -52,6 +54,9 @@ module AppConfig
   def remove_rack_middleware(application)
     application.middleware.delete(
       OpenTelemetry::Instrumentation::Rack::Middlewares::TracerMiddleware
+    )
+    application.middleware.delete(
+      Rack::Events
     )
   end
 
