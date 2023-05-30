@@ -68,7 +68,8 @@ module OpenTelemetry
           def client_attributes(sql)
             attributes = {
               ::OpenTelemetry::SemanticConventions::Trace::DB_SYSTEM => 'mysql',
-              ::OpenTelemetry::SemanticConventions::Trace::NET_PEER_NAME => net_peer_name
+              ::OpenTelemetry::SemanticConventions::Trace::NET_PEER_NAME => net_peer_name,
+              'db.cluster.name' => @_otel_net_peer_name
             }
 
             attributes[::OpenTelemetry::SemanticConventions::Trace::PEER_SERVICE] = config[:peer_service] unless config[:peer_service].nil?
@@ -79,6 +80,8 @@ module OpenTelemetry
             when :include
               attributes[::OpenTelemetry::SemanticConventions::Trace::DB_STATEMENT] = sql
             end
+
+            attributes.compact!
 
             attributes
           end
