@@ -6,7 +6,6 @@
 
 module OpenTelemetry
   module Instrumentation
-    # rubocop:disable Style/Documentation
     module ActiveSupport
       # The SpanSubscriber is a special ActiveSupport::Notification subscription
       # handler which turns notifications into generic spans, taking care to handle
@@ -51,6 +50,9 @@ module OpenTelemetry
       class SpanSubscriber
         ALWAYS_VALID_PAYLOAD_TYPES = [TrueClass, FalseClass, String, Numeric, Symbol].freeze
 
+        attr_reader :tracer
+        attr_reader :span_name
+
         def initialize(name:, tracer:, notification_payload_transform: nil, disallowed_notification_payload_keys: [])
           @span_name = name.split('.')[0..1].reverse.join(' ').freeze
           @tracer = tracer
@@ -58,8 +60,15 @@ module OpenTelemetry
           @disallowed_notification_payload_keys = disallowed_notification_payload_keys
         end
 
+        # Invoked by ActiveSupport::Notifications when a the ActiveSupport instrumentation is started
+        # Overriding this method in child classes is **discouraged**. Use `new_span` instead.
+        #
+        # @param [String] name The notification name
+        # @param [String] id The notification id
+        # @param [Hash] payload The notification payload
+        # @return [Array<OpenTelemetry::Trace::Span, Object>] The span and context token used for unit testing
         def start(name, id, payload)
-          span = @tracer.start_span(@span_name, kind: :internal)
+          span = new_span(name, id, payload)
           token = OpenTelemetry::Context.attach(
             OpenTelemetry::Trace.context_with_span(span)
           )
@@ -71,6 +80,29 @@ module OpenTelemetry
           [span, token]
         end
 
+        # Creates a new span for the given notification.
+        #
+        # By default this method creates `internal` spans with a white space separated reversed notification name.
+        # For example `sql.active_record` will become `active_record sql`.
+        #
+        # This method may be overridden by child classes to provide custom span names, create spans with different attributes, links, etc.
+        #
+        # @param [String] name The notification name
+        # @param [String] id The notification id
+        # @param [Hash] payload The notification payload
+        # @return [OpenTelemetry::Trace::Span] The created span
+        def new_span(_name, _id, _payload)
+          tracer.start_span(span_name, kind: :internal)
+        end
+
+        # Invoked by ActiveSupport::Notifications when a the ActiveSupport instrumentation is started
+        # Overriding this method in child classes is **discouraged**.
+        # If there is missing functionality, please open an issue or PR to change the functionality of the ActiveSupport Instrumentation.
+        #
+        # @param [String] name The notification name
+        # @param [String] id The notification id
+        # @param [Hash] payload The notification payload
+        # @return [Array<OpenTelemetry::Trace::Span, Object>] The span and context token used for unit testing
         def finish(name, id, payload)
           span = payload.delete(:__opentelemetry_span)
           token = payload.delete(:__opentelemetry_ctx_token)
@@ -126,5 +158,4 @@ module OpenTelemetry
       end
     end
   end
-  # rubocop:enable Style/Documentation
 end
