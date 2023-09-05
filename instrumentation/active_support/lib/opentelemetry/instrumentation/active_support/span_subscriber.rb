@@ -27,6 +27,10 @@ module OpenTelemetry
           disallowed_notification_payload_keys: disallowed_notification_payload_keys
         )
 
+        register_subscriber(subscriber)
+      end
+
+      def self.register_subscriber(subscriber)
         subscriber_object = ::ActiveSupport::Notifications.subscribe(pattern, subscriber)
 
         ::ActiveSupport::Notifications.notifier.synchronize do
