@@ -114,7 +114,7 @@ jobs:
         with:
           gem: "opentelemetry-instrumentation-${{ matrix.gem }}"
           latest: "true"
-          ruby: "jruby-9.4.2.0"
+          ruby: "jruby-9.4.6.0"
       - name: "Truffleruby Filter"
         id: truffleruby_skip
         shell: bash
