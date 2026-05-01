@@ -14,6 +14,7 @@ ignorePaths:
   - "*.proto"
   - "CODEOWNERS"
   - "*.tt"
+  - "**/.yardopts"
 patterns:
   - name: CodeBlock
     pattern: |
@@ -32,6 +33,8 @@ patterns:
       /x
   - name: "GitHub Handle"
     pattern: "@[a-zA-Z0-9-_]+\\b"
+  - name: "Renovate PR"
+    pattern: "chore\\(deps\\): update (.*) to (v|.+ )([0-9.]+)"
 languageSettings:
   - languageId: json, jsonc
     includeRegExpList:
@@ -41,6 +44,7 @@ languageSettings:
       - CodeBlock
       - CodeName
       - GitHub Handle
+      - Renovate PR
   - languageId: ruby
     includeRegExpList:
       - "#.*/g"
@@ -63,11 +67,14 @@ dictionaries:
 ignoreWords:
   - sendfile
   - millis
+  - jsonlintrc
+  - Dockerfiles
 words:
   - AWSXRayTrace
   - AWSXRaySamplingClient
   - AWSXRayRemoteSampler
   - enqueuers
+  - jsonlint
   - myapp
   - otelbot
   - otelcol
@@ -82,3 +89,5 @@ words:
 
   - linkspector
   - sarif
+  - bigdecimal
+  - confluentinc
